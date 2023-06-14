@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Contrôle des LED</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+      crossorigin="anonymous"
+    />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.2.0/socket.io.js"></script>
+  </head>
+  <body>
+    <div class="container pt-4">
+      <h1 class="text-center">Contrôle des LED</h1>
+      <div class="row">
+        <div class="col-4 mt-3 d-flex justify-content-center">
+          <button id="btn1">
+            <img id="img1" src="down.png" width="100px" alt="Down" />
+          </button>
+        </div>
+        <div class="col-4 mt-3 d-flex justify-content-center">
+          <button id="btn3">
+            <img id="img3" src="down.png" width="100px" alt="Down" />
+          </button>
+        </div>
+        <div class="col-4 mt-3 d-flex justify-content-center">
+          <button id="btn2">
+            <img id="img2" src="down.png" width="100px" alt="Down" />
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const socket = io();
+
+      $(document).ready(function () {
+        // Gestion des clics sur les boutons
+        $("#btn1").click(function () {
+          toggleImage(this, "img1", "r.png", "down.png");
+          toggleEvent(this, "img1", "r.png", "down.png", 1);
+        });
+
+        $("#btn2").click(function () {
+          toggleImage(this, "img2", "g.png", "down.png");
+          toggleEvent(this, "img2", "g.png", "down.png", 2);
+        });
+
+        $("#btn3").click(function () {
+          toggleImage(this, "img3", "y.png", "down.png");
+          toggleEvent(this, "img3", "y.png", "down.png", 3);
+        });
+      });
+
+      function toggleImage(button, imgId, onImage, offImage) {
+        var img = $("#" + imgId);
+        if (img.attr("src") === onImage) {
+          img.attr("src", offImage);
+        } else {
+          img.attr("src", onImage);
+        }
+      }
+
+      function toggleEvent(button, imgId, onImage, offImage, num) {
+        var img = $("#" + imgId);
+        if (img.attr("src") === onImage) {
+          sendEvent(num);
+        } else {
+          sendEvent(num + 3);
+        }
+      }
+
+      function sendEvent(ledNumber) {
+        socket.emit("led", ledNumber);
+      }
+    </script>
+  </body>
+</html>
