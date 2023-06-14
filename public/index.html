@@ -75,6 +75,16 @@
       function sendEvent(ledNumber) {
         socket.emit("led", ledNumber);
       }
+
+      socket.on("led", (data) => {
+        if (data == 1 || data == 4) {
+          toggleImage(this, "img1", "r.png", "down.png");
+        } else if (data == 2 || data == 5) {
+          toggleImage(this, "img2", "g.png", "down.png");
+        } else {
+          toggleImage(this, "img3", "y.png", "down.png");
+        }
+      });
     </script>
   </body>
 </html>
